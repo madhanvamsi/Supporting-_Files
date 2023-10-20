@@ -1,0 +1,30 @@
+public class Utility 
+{
+	public static void main(String[] args) 
+  {
+		//Token Generation 
+		String key="vamsi"; //secret key
+		
+		String token=
+		Jwts.builder()
+		.setId("vx1414") //id
+		.setSubject("JWT") //subject
+		.setIssuer("vamsi") //provider
+		.setIssuedAt(new Date(System.currentTimeMillis())) //token generation time
+		.setExpiration(new Date(System.currentTimeMillis()+TimeUnit.MINUTES.toMillis(10))) //expire time 
+		.signWith(SignatureAlgorithm.HS256, //signin ALogorithm 
+				Base64.getEncoder().encode(key.getBytes())) //secret key
+		.compact(); //converts all the abov data into string format
+		System.out.println(token);
+		
+		//--reading Token /Parsing token---
+		Claims c=
+		Jwts.parser()  //parser converts unreadable data to readable format data
+		.setSigningKey(Base64.getEncoder().encode(key.getBytes())) //secret key
+		.parseClaimsJws(token)
+		.getBody() ;
+		System.out.println(c.getId());
+		System.out.println(c.getIssuer());
+		System.out.println(c.getSubject());
+		System.out.println(c.getExpiration());
+	}
